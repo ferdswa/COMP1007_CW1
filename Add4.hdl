@@ -1,0 +1,65 @@
+CHIP Add4
+{
+	IN a[4], b[4];
+	OUT out[4];
+
+PARTS:
+	//use half adder for first bit
+	Not(in=b[0],out=hanout1);
+	Not(in=a[0],out=hanout2);
+	And(a=a[0],b=hanout1,out=haaout1);
+	And(a=hanout2,b=b[0],out=haaout2);
+	Or(a=haaout1,b=haaout2,out=out[0]);
+	And(a=b[0],b=a[0],out=carry1);
+
+	//FA 1
+	Not(in = b[1],out = noutx);
+	Not(in = a[1],out = nouty);
+	And(a = a[1],b = noutx,out = andout1);
+	And(a = nouty,b = b[1],out = andout2);
+	Or(a = andout1,b = andout2, out = xorout1);
+	
+	Not(in = xorout1,out = noutx2);
+	Not(in = carry1,out = nouty2);
+	And(a = carry1,b = noutx2,out = and2out1);
+	And(a = nouty2,b = xorout1,out = and2out2);
+	Or(a = and2out1,b = and2out2, out = out[1]);
+
+	And(a=xorout1,b=carry1,out=ac11);
+	And(a=b[1],b=a[1],out=ac12);
+	Or(a=ac11,b=ac12,out=carry2);
+
+	//FA2
+	Not(in = b[2],out = noutx1);
+	Not(in = a[2],out = nouty1);
+	And(a = a[2],b = noutx1,out = andout11);
+	And(a = nouty1,b = b[2],out = andout21);
+	Or(a = andout11,b = andout21, out = xorout11);
+	
+	Not(in = xorout11,out = noutx21);
+	Not(in = carry2,out = nouty21);
+	And(a = carry2,b = noutx21,out = and2out11);
+	And(a = nouty21,b = xorout11,out = and2out21);
+	Or(a = and2out11,b = and2out21, out = out[2]);
+
+	And(a=xorout11,b=carry2,out=ac21);
+	And(a=b[2],b=a[2],out=ac22);
+	Or(a=ac21,b=ac22,out=carry3);
+
+	//FA3
+	Not(in = b[3],out = noutx2a);
+	Not(in = a[3],out = nouty2a);
+	And(a = a[3],b = noutx2a,out = andout2a);
+	And(a = nouty2a,b = b[3],out = andout22);
+	Or(a = andout2a,b = andout22, out = xorout21);
+	
+	Not(in = xorout21,out = noutx2b);
+	Not(in = carry3,out = nouty2b);
+	And(a = carry3,b = noutx2b,out = and2out12);
+	And(a = nouty2b,b = xorout21,out = and2out22);
+	Or(a = and2out12,b = and2out22, out = out[3]);
+
+	And(a=xorout21,b=carry3,out=ac31);
+	And(a=b[3],b=a[3],out=ac32);
+	Or(a=ac31,b=ac32,out=carry4);
+}

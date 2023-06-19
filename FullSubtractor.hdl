@@ -1,0 +1,32 @@
+// Should Calculate X-Y-Bin
+// With the result output in D and any borrow signaled on bout
+
+CHIP FullSubtractor
+{
+	IN x,y,bin;
+	OUT d, bout;
+	
+	PARTS:
+	//Solve for d means double xor
+	Not(in = x,out = noutx);
+	Not(in = y,out = nouty);
+	And(a = y,b = noutx,out = andout1);
+	And(a = nouty,b = x,out = andout2);
+	Or(a = andout1,b = andout2, out = xorout1);
+	
+	Not(in = xorout1,out = noutx2);
+	Not(in = bin,out = nouty2);
+	And(a = bin,b = noutx2,out = and2out1);
+	And(a = nouty2,b = xorout1,out = and2out2);
+	Or(a = and2out1,b = and2out2, out = d);
+
+	//Other side (bout)
+	Not(in=x,out=notx);
+	And(a=notx,b=bin,out=andx1);
+	And(a=notx,b=y,out=nxandy);
+	And(a=y,b=bin,out=yandbin);
+
+	//ORing
+	Or(a=andx1,b=nxandy,out=oresult1);
+	Or(a=oresult1,b=yandbin,out=bout);
+}

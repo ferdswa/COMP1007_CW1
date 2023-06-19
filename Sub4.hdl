@@ -1,0 +1,82 @@
+CHIP Sub4
+{
+	IN a[4],b[4];
+	OUT out[4],bout;
+
+	PARTS:
+	
+	//halfsub for first step
+	Not(in=a[0],out=fsn1);
+	And(a=fsn1,b=b[0],out=borrow1);
+
+	Not(in = a[0],out = fsn2);
+	Not(in = b[0],out = fsn3);
+	And(a = b[0],b = fsn2,out = fsnao1);
+	And(a = fsn3,b = a[0],out = fsnao2);
+	Or(a = fsnao1,b = fsnao2, out = out[0]);
+	
+	//FULL SUB 1
+	Not(in = a[1],out = noutx);
+	Not(in = b[1],out = nouty);
+	And(a = b[1],b = noutx,out = andouta);
+	And(a = nouty,b = a[1],out = andoutb);
+	Or(a = andouta,b = andoutb, out = xorout);
+	
+	Not(in = xorout,out = nout2x);
+	Not(in = borrow1,out = nout2y);
+	And(a = borrow1,b = nout2x,out = and2outa);
+	And(a = nout2y,b = xorout,out = and2outb);
+	Or(a = and2outa,b = and2outb, out = out[1]);
+
+	Not(in=a[1],out=notx);
+	And(a=notx,b=borrow1,out=binandx);
+	And(a=notx,b=b[1],out=nxandy);
+	And(a=b[1],b=borrow1,out=yandbin);
+
+	Or(a=binandx,b=nxandy,out=oresult);
+	Or(a=oresult,b=yandbin,out=borrow2);
+
+	
+	//FS2
+	Not(in = a[2],out = noutx1);
+	Not(in = b[2],out = nouty1);
+	And(a = b[2],b = noutx1,out = andouta1);
+	And(a = nouty1,b = a[2],out = andoutb1);
+	Or(a = andouta1,b = andoutb1, out = xorout1);
+	
+	Not(in = xorout1,out = nout2x1);
+	Not(in = borrow2,out = nout2y1);
+	And(a = borrow2,b = nout2x1,out = and2outa1);
+	And(a = nout2y1,b = xorout1,out = and2outb1);
+	Or(a = and2outa1,b = and2outb1, out = out[2]);
+
+	Not(in=a[2],out=notx1);
+	And(a=notx1,b=borrow2,out=binandx1);
+	And(a=notx1,b=b[2],out=nxandy1);
+	And(a=b[2],b=borrow2,out=yandbin1);
+
+	Or(a=binandx1,b=nxandy1,out=oresult1);
+	Or(a=oresult1,b=yandbin1,out=borrow3);
+
+
+	//FS3
+	Not(in = a[3],out = noutx2);
+	Not(in = b[3],out = nouty2);
+	And(a = b[3],b = noutx2,out = andouta2);
+	And(a = nouty2,b = a[3],out = andoutb2);
+	Or(a = andouta2,b = andoutb2, out = xorout2);
+	
+	Not(in = xorout2,out = nout2x2);
+	Not(in = borrow3,out = nout2y2);
+	And(a = borrow3,b = nout2x2,out = and2outa2);
+	And(a = nout2y2,b = xorout2,out = and2outb2);
+	Or(a = and2outa2,b = and2outb2, out = out[3]);
+
+	Not(in=a[3],out=notx2);
+	And(a=notx2,b=borrow3,out=binandx2);
+	And(a=notx2,b=b[3],out=nxandy2);
+	And(a=b[3],b=borrow3,out=yandbin2);
+
+	Or(a=binandx2,b=nxandy2,out=oresult2);
+	Or(a=oresult2,b=yandbin2,out=bout);
+}

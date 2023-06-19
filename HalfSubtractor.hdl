@@ -1,0 +1,16 @@
+CHIP HalfSubtractor
+{
+	IN x,y;
+	OUT d, bout;
+	
+	PARTS:
+
+	Not(in=x,out=notx);
+	And(a=notx,b=y,out=bout);
+
+	Not(in = x,out = noutx);
+	Not(in = y,out = nouty);
+	And(a = y,b = noutx,out = andout1);
+	And(a = nouty,b = x,out = andout2);
+	Or(a = andout1,b = andout2, out = d);
+}
